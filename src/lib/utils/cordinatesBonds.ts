@@ -25,8 +25,8 @@ export default class CordinatesBounds {
   extend(obj: CordinatesBounds | Cordinates): this {
     const sw = this._sw;
     const ne = this._ne;
-    let sw2: Cordinates | undefined;
-    let ne2: Cordinates | undefined;
+    let sw2: Cordinates;
+    let ne2: Cordinates;
 
     if (obj instanceof Cordinates) {
       sw2 = obj;
@@ -55,46 +55,44 @@ export default class CordinatesBounds {
     return this;
   }
 
-  getCenter(): Cordinates | undefined {
-    if (!this._sw || !this._ne) return undefined;
-
+  getCenter(): Cordinates {
     return new Cordinates(
       (this._sw.lat + this._ne.lat) / 2,
       (this._sw.lng + this._ne.lng) / 2
     );
   }
 
-  getSouthWest(): Cordinates {
+  get sw(): Cordinates {
     return this._sw;
   }
 
-  getNorthEast(): Cordinates {
+  get ne(): Cordinates {
     return this._ne;
   }
 
-  getNorthWest(): Cordinates | undefined {
-    if (!this._sw) return;
-    return new Cordinates(this.getNorth(), this.getWest());
+  get nw(): Cordinates {
+    if (!this._sw) return new Cordinates(0, 0);
+    return new Cordinates(this.north, this.west);
   }
 
-  getSouthEast(): Cordinates | undefined {
-    if (!this._sw) return;
-    return new Cordinates(this.getSouth(), this.getEast());
+  get se(): Cordinates {
+    if (!this._sw) return new Cordinates(0, 0);
+    return new Cordinates(this.south, this.east);
   }
 
-  getWest(): number {
+  get west(): number {
     return this._sw?.lng;
   }
 
-  getSouth(): number {
+  get south(): number {
     return this._sw?.lat;
   }
 
-  getEast(): number {
+  get east(): number {
     return this._ne?.lng;
   }
 
-  getNorth(): number {
+  get north(): number {
     return this._ne?.lat;
   }
 }
