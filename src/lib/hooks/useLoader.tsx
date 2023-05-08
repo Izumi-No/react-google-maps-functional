@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-type Props = {
+export type Props = {
   apiKey?: string;
   initialCenter?: {
     lat: number;

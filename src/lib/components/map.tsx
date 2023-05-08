@@ -1,7 +1,20 @@
 import { useGoogleMaps } from "../hooks/useLoader";
+import { Props as UseGoogleMapsProps } from "../hooks/useLoader";
 
-export function Map() {
-  const [mapRef, map] = useGoogleMaps({});
+interface Props extends React.HTMLProps<HTMLDivElement> {
+  width?: string;
+  height?: string;
+  mapProps?: UseGoogleMapsProps;
+}
 
-  return <div style={{ width: "100vw", height: "100vh" }} ref={mapRef}></div>;
+export function Map({ height, width, mapProps, ...rest }: Props) {
+  const [mapRef, map] = useGoogleMaps(mapProps || {});
+
+  return (
+    <div
+      style={{ width: width || "100%", height: height || "100%" }}
+      ref={mapRef}
+      {...rest}
+    ></div>
+  );
 }

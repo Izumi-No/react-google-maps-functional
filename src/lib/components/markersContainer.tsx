@@ -1,7 +1,8 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { Marker } from "./marker";
 
 type Props = {
-  markers: ReactNode[];
+  markers: (typeof Marker)[];
 };
 
 export function MarkersContainer({ markers }: Props) {
