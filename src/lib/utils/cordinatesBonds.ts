@@ -1,0 +1,100 @@
+import { Cordinates } from "./cordinates";
+
+export default class CordinatesBounds {
+  private _sw!: Cordinates;
+  private _ne!: Cordinates;
+
+  static convert(
+    a: CordinatesBounds | Cordinates
+  ): CordinatesBounds | Cordinates {
+    if (!a || a instanceof CordinatesBounds) return a;
+    return new CordinatesBounds(a);
+  }
+
+  constructor(sw?: Cordinates, ne?: Cordinates) {
+    if (!sw) return;
+    const cordCordinatess = ne ? [sw, ne] : sw;
+
+    if (Array.isArray(cordCordinatess)) {
+      for (let i = 0, len = cordCordinatess.length; i < len; i++) {
+        this.extend(cordCordinatess[i]);
+      }
+    }
+  }
+
+  extend(obj: CordinatesBounds | Cordinates): this {
+    const sw = this._sw;
+    const ne = this._ne;
+    let sw2: Cordinates | undefined;
+    let ne2: Cordinates | undefined;
+
+    if (obj instanceof Cordinates) {
+      sw2 = obj;
+      ne2 = obj;
+    } else if (obj instanceof CordinatesBounds) {
+      sw2 = obj._sw;
+      ne2 = obj._ne;
+
+      if (!sw2 || !ne2) return this;
+    } else {
+      return obj
+        ? this.extend(Cordinates.convert(obj) || CordinatesBounds.convert(obj))
+        : this;
+    }
+
+    if (!sw && !ne) {
+      this._sw = new Cordinates(sw2.lat, sw2.lng);
+      this._ne = new Cordinates(ne2.lat, ne2.lng);
+    } else {
+      sw.lat = Math.min(sw2.lat, sw.lat);
+      sw.lng = Math.min(sw2.lng, sw.lng);
+      ne.lat = Math.max(ne2.lat, ne.lat);
+      ne.lng = Math.max(ne2.lng, ne.lng);
+    }
+
+    return this;
+  }
+
+  getCenter(): Cordinates | undefined {
+    if (!this._sw || !this._ne) return undefined;
+
+    return new Cordinates(
+      (this._sw.lat + this._ne.lat) / 2,
+      (this._sw.lng + this._ne.lng) / 2
+    );
+  }
+
+  getSouthWest(): Cordinates {
+    return this._sw;
+  }
+
+  getNorthEast(): Cordinates {
+    return this._ne;
+  }
+
+  getNorthWest(): Cordinates | undefined {
+    if (!this._sw) return;
+    return new Cordinates(this.getNorth(), this.getWest());
+  }
+
+  getSouthEast(): Cordinates | undefined {
+    if (!this._sw) return;
+    return new Cordinates(this.getSouth(), this.getEast());
+  }
+
+  getWest(): number {
+    return this._sw?.lng;
+  }
+
+  getSouth(): number {
+    return this._sw?.lat;
+  }
+
+  getEast(): number {
+    return this._ne?.lng;
+  }
+
+  getNorth(): number {
+    return this._ne?.lat;
+  }
+}
