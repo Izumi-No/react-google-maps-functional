@@ -1,20 +1,19 @@
-import { PropsWithChildren, ReactNode } from "react";
 import { Map } from "./components/map";
-import { MarkersContainer } from "./components/markersContainer";
+import { MarkerElement, MarkersContainer } from "./components/markersContainer";
 
-export function MapAggregate({ children }: PropsWithChildren) {
+function markerAsArray(marker: MarkerElement | MarkerElement[]) {
+  return Array.isArray(marker) ? marker : [marker];
+}
+
+export function MapAggregate({
+  children,
+}: {
+  children?: MarkerElement | MarkerElement[];
+}) {
   return (
     <>
       <Map />
-      <MarkersContainer
-        markers={
-          children
-            ? Array.isArray(children)
-              ? (children as ReactNode[])
-              : [children]
-            : ([] as ReactNode[])
-        }
-      />
+      <MarkersContainer markers={children ? markerAsArray(children) : []} />
     </>
   );
 }

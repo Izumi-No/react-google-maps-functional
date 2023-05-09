@@ -1,8 +1,9 @@
-import { ReactNode, useState } from "react";
-import { Marker } from "./marker";
+import React, { ReactElement } from "react";
+
+export type MarkerElement = ReactElement<{ lat: number; lng: number }>;
 
 type Props = {
-  markers: (typeof Marker)[];
+  markers: MarkerElement[];
 };
 
 export function MarkersContainer({ markers }: Props) {
